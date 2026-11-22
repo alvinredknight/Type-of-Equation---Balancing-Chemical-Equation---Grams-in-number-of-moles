@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chemical Equations - Christmas Activity (Grade 11)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#7a0f1d;--bg2:#0f4d2e;--accent:#f5c542;--pri:#c8102e;--sec:#1b6b3a;--ink:#1d1d1f;--card:rgba(255,255,255,.95);--soft:#fff6e0}
+body.snowman{--bg1:#143559;--bg2:#5aa6d8;--accent:#ff8c1a;--pri:#d62839;--sec:#1f5f8b;--soft:#eaf6ff}
+body.chimney{--bg1:#2a120d;--bg2:#8b2c1f;--accent:#ffb347;--pri:#b3261e;--sec:#4b2e24;--soft:#fff1e0}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:'Poppins','Segoe UI',system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;min-height:100vh;line-height:1.5}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:12px 14px 40px}
+sub{font-size:.68em;vertical-align:baseline;position:relative;top:.3em}
+button,input,select,textarea{font-family:inherit;font-size:1rem}
+button{cursor:pointer;touch-action:manipulation}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:rgba(20,20,25,.82);backdrop-filter:blur(8px);color:#fff;border-radius:0 0 16px 16px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.top h1{font-size:1rem;margin:0;font-weight:700;letter-spacing:.2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.14);padding:3px 10px;border-radius:99px;font-size:.8rem;font-weight:600;white-space:nowrap}
+.chip.tot{background:var(--accent);color:#222}
+.iconbtn{background:rgba(255,255,255,.16);color:#fff;border:0;border-radius:12px;padding:8px 12px;font-weight:600;min-height:40px}
+.iconbtn:hover{background:rgba(255,255,255,.28)}
+
+/* panels */
+.panel{background:var(--card);border-radius:20px;padding:18px;margin-top:14px;box-shadow:0 10px 30px rgba(0,0,0,.25);border-top:6px solid var(--accent)}
+.panel h2{margin:0 0 6px;font-size:1.25rem;font-weight:700}
+.panel h3{margin:14px 0 6px;font-size:1rem;font-weight:700;color:var(--pri)}
+.muted{color:#555;font-size:.9rem}
+#settings{display:none}
+#settings.open{display:block}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.btn{border:2px solid var(--pri);background:#fff;color:var(--pri);border-radius:12px;padding:9px 16px;font-weight:600;min-height:44px;transition:.15s}
+.seg button.on,.btn{background:var(--pri);color:#fff}
+.btn:hover,.seg button:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.green{background:var(--sec);border-color:var(--sec)}
+.btn.gold{background:var(--accent);border-color:var(--accent);color:#222}
+.btn.small{padding:6px 14px;min-height:38px}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+input[type=range]{accent-color:var(--pri);width:180px}
+input[type=text],select{border:2px solid #d9d2c3;border-radius:12px;padding:10px 12px;min-height:44px;background:#fff;width:100%;max-width:340px}
+input[type=text]:focus,select:focus,.coefIn:focus,.ansIn:focus,textarea:focus{outline:3px solid var(--accent);border-color:var(--pri)}
+
+/* hero */
+.hero{display:flex;align-items:flex-end;justify-content:center;gap:18px;padding:16px 8px 0;text-align:center;flex-wrap:wrap}
+.hero .scene{display:flex;align-items:flex-end;gap:10px;animation:bob 3s ease-in-out infinite}
+.hero h1{color:#fff;font-size:clamp(1.4rem,4.5vw,2.3rem);font-weight:800;margin:0;text-shadow:0 3px 12px rgba(0,0,0,.45);flex:1 1 280px}
+.hero p{color:#ffeccb;margin:4px 0 0;font-weight:500}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.santa-e{font-size:68px;line-height:1}
+
+/* setup */
+.setup{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.setup{grid-template-columns:1fr}}
+.field{margin:8px 0}
+.field label{display:block;font-weight:600;font-size:.9rem;margin-bottom:4px}
+.selfie{text-align:center}
+.cam{width:220px;height:220px;border-radius:50%;margin:6px auto;background:#eee;overflow:hidden;border:5px solid var(--accent);display:flex;align-items:center;justify-content:center;position:relative}
+.cam video,.cam img{width:100%;height:100%;object-fit:cover}
+.cam video{transform:scaleX(-1)}
+.cam .ph{font-size:70px}
+
+/* profile chip */
+#profile{display:none;align-items:center;gap:12px}
+#profile.on{display:flex}
+.pthumb{width:56px;height:56px;border-radius:50%;overflow:hidden;border:3px solid var(--accent);position:relative;background:#eee;display:flex;align-items:center;justify-content:center;font-size:28px;flex:none}
+.pthumb img{width:100%;height:100%;object-fit:cover}
+.pthumb .mb{position:absolute;right:-4px;bottom:-4px;font-size:20px}
+
+/* tabs & badges */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tab{flex:1 1 120px;border:0;border-radius:14px 14px 0 0;padding:12px 8px;font-weight:700;background:rgba(255,255,255,.35);color:#fff;min-height:48px}
+.tab.on{background:var(--card);color:var(--pri)}
+.tab:disabled{opacity:.5;cursor:not-allowed}
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.bdg{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);color:#fff;padding:6px 12px 6px 6px;border-radius:99px;font-size:.8rem;font-weight:600}
+.bdg i{font-style:normal;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(0,0,0,.3);filter:grayscale(1) opacity(.6)}
+.bdg.got{background:var(--accent);color:#222}
+.bdg.got i{background:#fff;filter:none;box-shadow:0 0 0 3px var(--pri);animation:pop .6s}
+@keyframes pop{0%{transform:scale(.2) rotate(-90deg)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+/* questions */
+.guide{background:var(--soft);border-left:5px solid var(--sec);border-radius:12px;padding:10px 14px;margin:10px 0;font-size:.92rem}
+.guide ul{margin:4px 0;padding-left:20px}
+.q{display:flex;gap:12px;padding:14px 0;border-bottom:1px dashed #d8cfbb}
+.qn{flex:none;width:34px;height:34px;border-radius:50%;background:var(--pri);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+.qb{flex:1;min-width:0}
+.eq{font-size:1.2rem;font-weight:600;margin-bottom:8px;overflow-wrap:anywhere}
+.eq b.coef{color:var(--pri)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.choices{grid-template-columns:1fr}}
+.choice{text-align:left;padding:10px 12px;border:2px solid #d9d2c3;background:#fff;border-radius:12px;font-weight:500;min-height:44px}
+.choice:hover:not(:disabled){border-color:var(--pri)}
+.choice.sel{border-color:var(--pri);background:#ffe9ec;font-weight:700}
+.choice.right{background:#d8f5df;border-color:#1f9d4a}
+.choice.wrong{background:#ffd9d9;border-color:#d62828}
+.qa{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.res{font-weight:600;font-size:.9rem}
+.res.ok{color:#17803a}.res.bad{color:#c1121f}
+.coefIn{width:58px;text-align:center;border:2px solid var(--pri);border-radius:10px;padding:6px 2px;margin:0 4px 0 2px;font-weight:700;min-height:44px;background:#fffdf5}
+.ansIn{width:150px;border:2px solid var(--pri);border-radius:10px;padding:8px;min-height:44px;font-weight:700;background:#fffdf5}
+.mm{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.mm span{background:var(--soft);border:1px solid #e3d8bd;padding:2px 10px;border-radius:99px;font-size:.82rem}
+.donebox{display:none;margin-top:14px;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#fff3c4);text-align:center;font-weight:700}
+.donebox.on{display:block;animation:pop .5s}
+.donebox .big{font-size:2.4rem}
+
+/* scratch */
+#pad{width:100%;height:auto;aspect-ratio:1400/520;border-radius:14px;border:3px solid var(--sec);touch-action:none;cursor:crosshair;background:repeating-linear-gradient(#fffdf5 0 31px,#cfe3f5 31px 32px)}
+textarea{width:100%;min-height:70px;border:2px solid #d9d2c3;border-radius:12px;padding:10px;margin-top:8px;resize:vertical}
+.sw{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #999;padding:0}
+.sw.on{box-shadow:0 0 0 3px var(--pri)}
+
+/* summary */
+#sumCanvas{width:100%;max-width:620px;height:auto;display:block;margin:10px auto;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(30px);background:#222;color:#fff;padding:12px 20px;border-radius:14px;font-weight:600;opacity:0;transition:.35s;z-index:50;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.hide{display:none!important}
+footer{color:#ffeccb;text-align:center;margin-top:20px;font-size:.85rem}
+</style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+
+<div class="wrap">
+
+  <!-- Top bar -->
+  <div class="top">
+    <h1>⚗️ Chemical Equations · Grade 11</h1>
+    <div class="chips">
+      <span class="chip" id="c1">P1 0/10</span><span class="chip" id="c2">P2 0/10</span><span class="chip" id="c3">P3 0/10</span><span class="chip tot" id="ct">Total 0/30</span>
+    </div>
+    <button class="iconbtn" id="setBtn" type="button" aria-expanded="false">🎵 Theme &amp; Sound</button>
+  </div>
+
+  <!-- Settings -->
+  <div class="panel" id="settings">
+    <h2>🎨 Theme &amp; 🎵 Music</h2>
+    <div class="row"><b>Theme:</b>
+      <div class="seg" id="themeSeg">
+        <button type="button" data-t="santa" class="on">🎅 Santa &amp; Rudolf</button>
+        <button type="button" data-t="snowman">⛄ Snowman</button>
+        <button type="button" data-t="chimney">🏠 Chimney</button>
+      </div>
+    </div>
+    <div class="row"><b>Song:</b>
+      <div class="seg" id="songSeg">
+        <button type="button" data-s="0" class="on">🔔 Jingle Bells</button>
+        <button type="button" data-s="1">🎄 We Wish You a Merry Christmas</button>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn green" id="playBtn" type="button">▶ Play Music</button>
+      <button class="btn" id="muteBtn" type="button">🔊 Mute</button>
+      <button class="btn gold" id="testBtn" type="button">🔔 Test Sound</button>
+    </div>
+    <div class="row"><b>Volume calibration:</b>
+      <input type="range" id="vol" min="0" max="100" value="60" aria-label="Volume">
+      <span id="volv">60%</span>
+    </div>
+    <p class="muted">Tip: press “Test Sound”, then slide the volume until the chime is comfortable. This also sets the volume of the click and badge sounds.</p>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="scene" id="scene"></div>
+    <div style="flex:1 1 280px">
+      <h1>Chemical Equations Christmas Activity</h1>
+      <p>Types of Reactions · Balancing · Grams from Moles</p>
+    </div>
+  </div>
+
+  <!-- Setup -->
+  <div class="panel" id="setup">
+    <h2>🎁 Student Information</h2>
+    <div class="setup">
+      <div>
+        <div class="field"><label for="name">Full name</label><input type="text" id="name" placeholder="Type your name here" autocomplete="name"></div>
+        <div class="field"><label>Grade level</label><input type="text" value="Grade 11" disabled></div>
+        <div class="field"><label for="sect">Section</label>
+          <select id="sect"><option value="">— Choose section —</option><option>Daniel</option><option>Ezekiel</option></select>
+        </div>
+        <p class="muted">You will answer <b>3 parts × 10 points = 30 points</b>. Each question can be checked once, so think carefully. Pass mark: <b>25/30</b>. Answers may be rounded to two decimal places.</p>
+      </div>
+      <div class="selfie">
+        <label style="font-weight:600;font-size:.9rem">Selfie for your summary</label>
+        <div class="cam" id="cam"><span class="ph" id="camPh">🤳</span><video id="video" playsinline muted class="hide"></video><img id="shot" alt="Your selfie" class="hide"></div>
+        <div class="row" style="justify-content:center">
+          <button class="btn small green" id="camOn" type="button">📷 Open Camera</button>
+          <button class="btn small gold hide" id="snap" type="button">📸 Take Selfie</button>
+          <label class="btn small" style="display:inline-flex;align-items:center;cursor:pointer">🖼️ Upload / Take Photo<input type="file" id="file" accept="image/*" capture="user" class="hide"></label>
+        </div>
+        <div class="muted" id="camMsg">Allow camera access when asked. If the camera does not open, use “Upload / Take Photo”.</div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:14px"><button class="btn gold" id="startBtn" type="button" disabled>🎄 Start the Activity</button><span class="muted" id="startHint">Enter your name and choose your section to begin.</span></div>
+  </div>
+
+  <!-- Main -->
+  <div id="main" class="hide">
+    <div class="panel" id="profile" style="padding:10px 16px;margin-top:14px">
+      <div class="pthumb" id="pthumb">🎅</div>
+      <div><b id="pname"></b><br><span class="muted" id="psec"></span></div>
+    </div>
+
+    <div class="badges" id="badges"></div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab on" data-p="0" type="button">Part 1</button>
+      <button class="tab" data-p="1" type="button">Part 2</button>
+      <button class="tab" data-p="2" type="button">Part 3</button>
+      <button class="tab" data-p="3" type="button" disabled>🏆 Summary</button>
+    </div>
+
+    <!-- Part 1 -->
+    <div class="panel pane" id="pane0" style="margin-top:0;border-radius:0 0 20px 20px">
+      <h2>Part 1 · Types of Chemical Reactions <span class="chip" style="background:var(--accent)">10 pts</span></h2>
+      <p class="muted">Read each equation, choose the type of reaction, then press <b>Check</b>.</p>
+      <div class="guide"><b>Quick guide</b>
+        <ul>
+          <li><b>Combination:</b> two or more substances join to make one product (A + B → AB)</li>
+          <li><b>Decomposition:</b> one compound breaks into simpler substances (AB → A + B)</li>
+          <li><b>Single Displacement:</b> one element replaces another in a compound (A + BC → AC + B)</li>
+          <li><b>Double Displacement:</b> two compounds swap partners (AB + CD → AD + CB)</li>
+        </ul>
+      </div>
+      <div id="p1list"></div>
+      <div class="donebox" id="done0"></div>
+    </div>
+
+    <!-- Part 2 -->
+    <div class="panel pane hide" id="pane1" style="margin-top:0;border-radius:0 0 20px 20px">
+      <h2>Part 2 · Balancing Chemical Equations <span class="chip" style="background:var(--accent)">10 pts</span></h2>
+      <p class="muted">Type a coefficient from <b>1 to 6</b> in every box so the number of atoms of each element is equal on both sides. Use the smallest whole numbers. Use the scratch paper at the bottom of the page.</p>
+      <div class="guide"><b>Example:</b> H<sub>2</sub> + O<sub>2</sub> → H<sub>2</sub>O is balanced as <b>2</b> H<sub>2</sub> + <b>1</b> O<sub>2</sub> → <b>2</b> H<sub>2</sub>O (4 H and 2 O on each side). A coefficient of 1 is typed as 1.</div>
+      <div id="p2list"></div>
+      <div class="donebox" id="done1"></div>
+    </div>
+
+    <!-- Part 3 -->
+    <div class="panel pane hide" id="pane2" style="margin-top:0;border-radius:0 0 20px 20px">
+      <h2>Part 3 · Grams from Moles <span class="chip" style="background:var(--accent)">10 pts</span></h2>
+      <p class="muted">Use the balanced equation and the molecular masses given for each problem. Round your answer to two decimal places.</p>
+      <div class="guide"><b>Steps:</b>
+        <ul>
+          <li>Moles of the given substance × (coefficient of wanted ÷ coefficient of given) = moles of wanted</li>
+          <li>Moles of wanted × molecular mass (g/mol) = grams of wanted</li>
+          <li><b>Example:</b> 2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O. Given 3 mol H<sub>2</sub>, grams of H<sub>2</sub>O? 3 × (2/2) = 3 mol H<sub>2</sub>O; 3 × 18.02 = <b>54.06 g</b></li>
+        </ul>
+      </div>
+      <div id="p3list"></div>
+      <div class="donebox" id="done2"></div>
+    </div>
+
+    <!-- Summary -->
+    <div class="panel pane hide" id="pane3" style="margin-top:0;border-radius:0 0 20px 20px">
+      <h2>🏆 Summary of Completion</h2>
+      <canvas id="sumCanvas" width="900" height="1300"></canvas>
+      <div class="row" style="justify-content:center">
+        <button class="btn gold" id="dlBtn" type="button">Click Here to Download the Summary</button>
+        <button class="btn green" id="againBtn" type="button">🔄 Start a New Attempt</button>
+      </div>
+    </div>
+
+    <!-- Scratch paper -->
+    <div class="panel" id="scratch">
+      <h2>✏️ Scratch Paper</h2>
+      <p class="muted">Write or draw with your mouse, pen or finger. Type notes in the box below if you prefer the keyboard.</p>
+      <div class="row">
+        <button class="sw on" data-c="#1d3557" style="background:#1d3557" aria-label="Blue pen" type="button"></button>
+        <button class="sw" data-c="#c8102e" style="background:#c8102e" aria-label="Red pen" type="button"></button>
+        <button class="sw" data-c="#1b6b3a" style="background:#1b6b3a" aria-label="Green pen" type="button"></button>
+        <button class="sw" data-c="#222" style="background:#222" aria-label="Black pen" type="button"></button>
+        <button class="btn small" id="eraser" type="button">🧽 Eraser</button>
+        <label class="muted">Size <input type="range" id="psize" min="1" max="12" value="3" style="width:110px"></label>
+        <button class="btn small green" id="clearPad" type="button">🗑 Clear</button>
+      </div>
+      <canvas id="pad" width="1400" height="520"></canvas>
+      <textarea id="notes" placeholder="Typed scratch notes (optional)…"></textarea>
+    </div>
+  </div>
+
+  <footer>🎄 Merry Christmas! · Chemical Equations Activity · Grade 11</footer>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+
+/* ================= Chemistry helpers ================= */
+const fmt=f=>f.replace(/(\d+)/g,'<sub>$1</sub>');
+function parseEq(s){
+  const [l,r]=s.split('->');
+  const side=x=>x.split('+').map(t=>t.trim()).map(t=>{const m=t.match(/^(\d*)(.+)$/);return{c:m[1]?+m[1]:1,f:m[2]}});
+  return{l:side(l),r:side(r)};
+}
+function sideHTML(terms,coefs){
+  return terms.map((t,i)=>{const c=coefs?coefs[i]:t.c;return(c>1?'<b class="coef">'+c+'</b> ':'')+fmt(t.f)}).join(' + ');
+}
+function eqHTML(p,coefs){
+  const nl=p.l.length;
+  return sideHTML(p.l,coefs&&coefs.slice(0,nl))+' → '+sideHTML(p.r,coefs&&coefs.slice(nl));
+}
+function countAtoms(f){
+  const st=[{}];let i=0;
+  while(i<f.length){
+    const ch=f[i];
+    if(ch==='('){st.push({});i++}
+    else if(ch===')'){i++;let n='';while(/\d/.test(f[i]||''))n+=f[i++];n=n?+n:1;const top=st.pop();for(const k in top)st[st.length-1][k]=(st[st.length-1][k]||0)+top[k]*n}
+    else if(/[A-Z]/.test(ch)){let el=ch;i++;while(/[a-z]/.test(f[i]||''))el+=f[i++];let n='';while(/\d/.test(f[i]||''))n+=f[i++];n=n?+n:1;st[st.length-1][el]=(st[st.length-1][el]||0)+n}
+    else i++;
+  }
+  return st[0];
+}
+function isBalanced(p,coefs){
+  const nl=p.l.length,L={},R={};
+  p.l.forEach((t,i)=>{const a=countAtoms(t.f);for(const k in a)L[k]=(L[k]||0)+a[k]*coefs[i]});
+  p.r.forEach((t,i)=>{const a=countAtoms(t.f);for(const k in a)R[k]=(R[k]||0)+a[k]*coefs[nl+i]});
+  const ks=new Set([...Object.keys(L),...Object.keys(R)]);
+  for(const k of ks)if(L[k]!==R[k])return false;
+  return coefs.reduce((g,c)=>gcd(g,c),0)===1;
+}
+
+/* ================= Question banks ================= */
+const TYPES=['Combination Reaction','Decomposition Reaction','Single Displacement','Double Displacement'];
+const P1=[
+ ['2Mg + O2 -> 2MgO',0],['N2 + 3H2 -> 2NH3',0],['2Na + Cl2 -> 2NaCl',0],['CaO + H2O -> Ca(OH)2',0],['2H2 + O2 -> 2H2O',0],['4Al + 3O2 -> 2Al2O3',0],['SO3 + H2O -> H2SO4',0],
+ ['2H2O -> 2H2 + O2',1],['CaCO3 -> CaO + CO2',1],['2KClO3 -> 2KCl + 3O2',1],['2HgO -> 2Hg + O2',1],['2H2O2 -> 2H2O + O2',1],['2NaCl -> 2Na + Cl2',1],['H2CO3 -> H2O + CO2',1],
+ ['Zn + 2HCl -> ZnCl2 + H2',2],['Fe + CuSO4 -> FeSO4 + Cu',2],['Cl2 + 2KBr -> 2KCl + Br2',2],['2Na + 2H2O -> 2NaOH + H2',2],['Mg + 2AgNO3 -> Mg(NO3)2 + 2Ag',2],['2Al + 3CuCl2 -> 2AlCl3 + 3Cu',2],
+ ['AgNO3 + NaCl -> AgCl + NaNO3',3],['BaCl2 + Na2SO4 -> BaSO4 + 2NaCl',3],['NaOH + HCl -> NaCl + H2O',3],['Pb(NO3)2 + 2KI -> PbI2 + 2KNO3',3],['CaCl2 + Na2CO3 -> CaCO3 + 2NaCl',3],['Ca(OH)2 + 2HCl -> CaCl2 + 2H2O',3]
+];
+const P2=[
+ ['H2 + O2 -> H2O',[2,1,2]],['N2 + H2 -> NH3',[1,3,2]],['Mg + O2 -> MgO',[2,1,2]],['Al + O2 -> Al2O3',[4,3,2]],['Fe + O2 -> Fe2O3',[4,3,2]],
+ ['CH4 + O2 -> CO2 + H2O',[1,2,1,2]],['C3H8 + O2 -> CO2 + H2O',[1,5,3,4]],['C2H4 + O2 -> CO2 + H2O',[1,3,2,2]],['KClO3 -> KCl + O2',[2,2,3]],['H2O2 -> H2O + O2',[2,2,1]],
+ ['Zn + HCl -> ZnCl2 + H2',[1,2,1,1]],['Na + H2O -> NaOH + H2',[2,2,2,1]],['Al + CuCl2 -> AlCl3 + Cu',[2,3,2,3]],['BaCl2 + Na2SO4 -> BaSO4 + NaCl',[1,1,1,2]],
+ ['Pb(NO3)2 + KI -> PbI2 + KNO3',[1,2,1,2]],['Ca(OH)2 + HCl -> CaCl2 + H2O',[1,2,1,2]],['Al + H2SO4 -> Al2(SO4)3 + H2',[2,3,1,3]],['NaOH + H2SO4 -> Na2SO4 + H2O',[2,1,1,2]],
+ ['CaCO3 + HCl -> CaCl2 + H2O + CO2',[1,2,1,1,1]],['P4 + O2 -> P4O10',[1,5,1]],['Na + Cl2 -> NaCl',[2,1,2]]
+];
+const P3=['2H2 + O2 -> 2H2O','N2 + 3H2 -> 2NH3','2Mg + O2 -> 2MgO','CH4 + 2O2 -> CO2 + 2H2O','2KClO3 -> 2KCl + 3O2','Zn + 2HCl -> ZnCl2 + H2','4Al + 3O2 -> 2Al2O3','CaCO3 -> CaO + CO2','2H2O -> 2H2 + O2','2Na + Cl2 -> 2NaCl','C3H8 + 5O2 -> 3CO2 + 4H2O','2H2O2 -> 2H2O + O2','Fe + CuSO4 -> FeSO4 + Cu','2NaOH + H2SO4 -> Na2SO4 + 2H2O'];
+const MM={H2:2.02,O2:32.00,H2O:18.02,N2:28.02,NH3:17.04,Mg:24.31,MgO:40.31,CH4:16.05,CO2:44.01,KClO3:122.55,KCl:74.55,Zn:65.38,HCl:36.46,ZnCl2:136.28,Al:26.98,Al2O3:101.96,CaCO3:100.09,CaO:56.08,Na:22.99,Cl2:70.90,NaCl:58.44,C3H8:44.11,H2O2:34.02,Fe:55.85,CuSO4:159.62,FeSO4:151.92,Cu:63.55,NaOH:40.00,H2SO4:98.09,Na2SO4:142.05};
+const MOLES=[0.5,1,1.5,2,2.5,3,4,5];
+
+/* ================= State ================= */
+const S={started:false,done:[0,0,0],score:[0,0,0],finished:false,master:false,selfie:null,section:'',name:'',attempt:null};
+const Q=[[],[],[]];
+const BADGES=[{i:'🔍',n:'Reaction Detective'},{i:'⚖️',n:'Balance Master'},{i:'🧪',n:'Gram Wizard'}];
+const total=()=>S.score[0]+S.score[1]+S.score[2];
+
+function genP1(){
+  const order=shuffle([0,1,2,3]),counts=[3,3,2,2],out=[];
+  order.forEach((t,k)=>{shuffle(P1.filter(x=>x[1]===t)).slice(0,counts[k]).forEach(x=>out.push({eq:x[0],t:x[1],sel:null,answered:false}))});
+  return shuffle(out);
+}
+function genP2(){return shuffle(P2).slice(0,10).map(x=>({eq:x[0],sol:x[1],answered:false}))}
+function genP3(){
+  return shuffle(P3).slice(0,10).map(eq=>{
+    const p=parseEq(eq);
+    const sp=[...p.l.map(t=>({...t,side:'l'})),...p.r.map(t=>({...t,side:'r'}))];
+    const g=sp[rnd(sp.length)];let t;do{t=sp[rnd(sp.length)]}while(t===g);
+    const n=MOLES[rnd(MOLES.length)];
+    const ans=Math.round(n*(t.c/g.c)*MM[t.f]*100)/100;
+    return{eq,p,g,t,n,ans,answered:false};
+  });
+}
+
+/* ================= Audio ================= */
+let AC=null,master=null,musicBus=null,vol=.6,muted=false,playing=false,songId=0,loopT=null,nodes=[];
+const NF={C4:261.63,D4:293.66,E4:329.63,F4:349.23,'F#4':369.99,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,G5:783.99};
+const parse=s=>s.trim().split(/\s+/).map(x=>{const[a,b]=x.split(':');return[a,parseFloat(b)]});
+const JA="E4:1 E4:1 E4:2 E4:1 E4:1 E4:2 E4:1 G4:1 C4:1.5 D4:.5 E4:4";
+const JB="F4:1 F4:1 F4:1.5 F4:.5 F4:1 E4:1 E4:1 E4:.5 E4:.5";
+const SONGS=[
+ {name:'Jingle Bells',bpm:150,notes:parse(`${JA} ${JB} E4:1 D4:1 D4:1 E4:1 D4:2 G4:2 ${JA} ${JB} G4:1 G4:1 F4:1 D4:1 C4:4 R:2`)},
+ {name:'We Wish You a Merry Christmas',bpm:150,notes:parse("D4:1 G4:1 G4:.5 A4:.5 G4:.5 F#4:.5 E4:1 E4:1 E4:1 A4:1 A4:.5 B4:.5 A4:.5 G4:.5 F#4:1 D4:1 D4:1 B4:1 B4:.5 C5:.5 B4:.5 A4:.5 G4:1 E4:1 D4:.5 D4:.5 E4:1 A4:1 F#4:1 G4:3 R:1.5")}
+];
+function ensureAC(){
+  if(!AC){
+    const C=window.AudioContext||window.webkitAudioContext;if(!C)return false;
+    AC=new C();master=AC.createGain();master.gain.value=muted?0:vol;master.connect(AC.destination);
+  }
+  if(AC.state==='suspended')AC.resume();
+  return true;
+}
+function tone(freq,t,dur,type,peak,bus,list){
+  const o=AC.createOscillator(),o2=AC.createOscillator(),g=AC.createGain();
+  o.type=type||'triangle';o.frequency.value=freq;o2.type='sine';o2.frequency.value=freq*2;
+  const g2=AC.createGain();g2.gain.value=.25;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(peak||.3,t+.012);g.gain.exponentialRampToValueAtTime(.0008,t+Math.max(dur,.06));
+  o.connect(g);o2.connect(g2);g2.connect(g);g.connect(bus||master);
+  o.start(t);o2.start(t);o.stop(t+dur+.05);o2.stop(t+dur+.05);
+  if(list)list.push(o,o2);
+}
+function startMusic(){
+  if(!ensureAC())return;
+  stopMusic(true);
+  musicBus=AC.createGain();musicBus.gain.value=.45;musicBus.connect(master);
+  const s=SONGS[songId],spb=60/s.bpm;let t=AC.currentTime+.08;
+  s.notes.forEach(([n,b])=>{if(n!=='R')tone(NF[n],t,b*spb*.9,'triangle',.32,musicBus,nodes);t+=b*spb});
+  playing=true;$('#playBtn').textContent='⏸ Pause Music';
+  loopT=setTimeout(startMusic,Math.max(100,(t-AC.currentTime)*1000));
+}
+function stopMusic(keep){
+  clearTimeout(loopT);nodes.forEach(o=>{try{o.stop()}catch(e){}});nodes=[];
+  if(musicBus){try{musicBus.disconnect()}catch(e){}musicBus=null}
+  if(!keep){playing=false;$('#playBtn').textContent='▶ Play Music'}
+}
+function sfx(k){
+  if(!ensureAC())return;const t=AC.currentTime;
+  if(k==='click')tone(880,t,.06,'sine',.22);
+  else if(k==='ok'){[523.25,659.25,783.99].forEach((f,i)=>tone(f,t+i*.09,.18,'triangle',.3))}
+  else if(k==='bad'){tone(220,t,.18,'sawtooth',.16);tone(165,t+.14,.26,'sawtooth',.16)}
+  else if(k==='badge'){[523.25,659.25,783.99,1046.5,783.99,1046.5].forEach((f,i)=>tone(f,t+i*.11,.28,'triangle',.3))}
+  else if(k==='test'){[784,988,1175].forEach((f,i)=>tone(f,t+i*.16,.4,'sine',.35))}
+}
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button,.choice,select,input[type=range],label.btn'))sfx('click')},true);
+
+$('#vol').addEventListener('input',e=>{vol=e.target.value/100;$('#volv').textContent=e.target.value+'%';if(master)master.gain.value=muted?0:vol;try{localStorage.setItem('cheq_vol',e.target.value)}catch(_){}});
+$('#testBtn').onclick=()=>{ensureAC();sfx('test')};
+$('#playBtn').onclick=()=>{playing?stopMusic():startMusic()};
+$('#muteBtn').onclick=()=>{muted=!muted;ensureAC();if(master)master.gain.value=muted?0:vol;$('#muteBtn').textContent=muted?'🔇 Unmute':'🔊 Mute'};
+$$('#songSeg button').forEach(b=>b.onclick=()=>{$$('#songSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');songId=+b.dataset.s;if(playing)startMusic()});
+$('#setBtn').onclick=()=>{const o=$('#settings').classList.toggle('open');$('#setBtn').setAttribute('aria-expanded',o)};
+try{const v=localStorage.getItem('cheq_vol');if(v!==null){$('#vol').value=v;vol=v/100;$('#volv').textContent=v+'%'}}catch(_){}
+
+/* ================= Themes & hero ================= */
+const SVG={
+ rudolf:`<svg viewBox="0 0 100 100" width="88" height="88" aria-label="Rudolf"><g stroke="#6b3e1d" stroke-width="4" fill="none" stroke-linecap="round"><path d="M30 32 L22 8 M22 8 L12 14 M24 17 L34 12 M70 32 L78 8 M78 8 L88 14 M76 17 L66 12"/></g><ellipse cx="50" cy="55" rx="28" ry="30" fill="#a0652f"/><ellipse cx="50" cy="73" rx="17" ry="13" fill="#e8c9a0"/><circle cx="40" cy="48" r="4" fill="#222"/><circle cx="60" cy="48" r="4" fill="#222"/><circle cx="50" cy="68" r="9" fill="#e11d2e"><animate attributeName="opacity" values="1;.55;1" dur="1.2s" repeatCount="indefinite"/></circle><circle cx="47" cy="65" r="2.5" fill="#fff" opacity=".75"/></svg>`,
+ snowman:`<svg viewBox="0 0 100 130" width="84" height="108" aria-label="Snowman"><rect x="30" y="4" width="40" height="24" rx="3" fill="#222"/><rect x="22" y="26" width="56" height="6" rx="3" fill="#222"/><rect x="30" y="20" width="40" height="5" fill="#c8102e"/><circle cx="50" cy="44" r="18" fill="#fff" stroke="#bcd" stroke-width="2"/><circle cx="43" cy="40" r="2.5" fill="#222"/><circle cx="57" cy="40" r="2.5" fill="#222"/><path d="M50 46 L72 50 L50 52Z" fill="#ff8c1a"/><path d="M36 54 Q50 64 64 54" stroke="#c8102e" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="50" cy="88" r="26" fill="#fff" stroke="#bcd" stroke-width="2"/><circle cx="50" cy="78" r="3" fill="#222"/><circle cx="50" cy="90" r="3" fill="#222"/><circle cx="50" cy="102" r="3" fill="#222"/><path d="M26 84 L8 70 M74 84 L92 70" stroke="#6b3e1d" stroke-width="4" stroke-linecap="round"/></svg>`,
+ chimney:`<svg viewBox="0 0 120 130" width="100" height="108" aria-label="Chimney"><g fill="#c8102e"><rect x="40" y="2" width="14" height="30" rx="6"/><rect x="66" y="2" width="14" height="30" rx="6"/></g><g fill="#222"><rect x="36" y="28" width="22" height="12" rx="3"/><rect x="62" y="28" width="22" height="12" rx="3"/></g><rect x="30" y="40" width="60" height="14" rx="3" fill="#fff"/><rect x="34" y="54" width="52" height="72" fill="#a8412a"/><g stroke="#f3d9c9" stroke-width="2"><path d="M34 70H86M34 86H86M34 102H86M34 118H86M60 54V70M46 70V86M74 70V86M60 86V102M46 102V118M74 102V118"/></g><rect x="26" y="40" width="68" height="6" rx="3" fill="#f6f6f6"/><circle cx="14" cy="40" r="3" fill="#fff"><animate attributeName="cy" values="40;10" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;0" dur="3s" repeatCount="indefinite"/></circle></svg>`
+};
+function setTheme(t){
+  document.body.className=t==='santa'?'':t;
+  $$('#themeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  const sc=$('#scene');
+  sc.innerHTML=t==='santa'?`<span class="santa-e">🎅</span><span class="santa-e" style="font-size:50px">🛷</span>${SVG.rudolf}`
+    :t==='snowman'?`${SVG.snowman}<span class="santa-e" style="font-size:44px">❄️</span>`
+    :`${SVG.chimney}<span class="santa-e" style="font-size:48px">🎁</span>`;
+  try{localStorage.setItem('cheq_theme',t)}catch(_){}
+  if(S.finished)drawSummary();
+}
+$$('#themeSeg button').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+
+/* ================= Snow ================= */
+(function(){
+  const c=$('#snow'),x=c.getContext('2d');let W,H,fl=[];
+  const rs=()=>{W=c.width=innerWidth;H=c.height=innerHeight;fl=Array.from({length:Math.min(90,Math.floor(W/14))},()=>({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*3,s:.4+Math.random()*1.1,d:Math.random()*6}))};
+  rs();addEventListener('resize',rs);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  (function f(){x.clearRect(0,0,W,H);x.fillStyle='rgba(255,255,255,.85)';fl.forEach(p=>{p.y+=p.s;p.d+=.02;p.x+=Math.sin(p.d)*.4;if(p.y>H){p.y=-5;p.x=Math.random()*W}x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fill()});requestAnimationFrame(f)})();
+})();
+
+/* ================= Toast ================= */
+let toastT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2800)}
+
+/* ================= Selfie ================= */
+let stream=null;
+function setSelfie(url){S.selfie=url;const im=$('#shot');im.src=url;im.classList.remove('hide');$('#video').classList.add('hide');$('#camPh').classList.add('hide');$('#snap').classList.add('hide');$('#camOn').textContent='📷 Retake with Camera'}
+function stopCam(){if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}}
+$('#camOn').onclick=async()=>{
+  try{
+    stopCam();
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});
+    const v=$('#video');v.srcObject=stream;await v.play();
+    v.classList.remove('hide');$('#shot').classList.add('hide');$('#camPh').classList.add('hide');$('#snap').classList.remove('hide');
+    $('#camMsg').textContent='Smile! Press “Take Selfie”.';
+  }catch(e){$('#camMsg').textContent='Camera not available here. Please use “Upload / Take Photo” instead.'}
+};
+$('#snap').onclick=()=>{
+  const v=$('#video');if(!v.videoWidth)return;
+  const s=Math.min(v.videoWidth,v.videoHeight),c=document.createElement('canvas');c.width=c.height=480;
+  const x=c.getContext('2d');x.translate(480,0);x.scale(-1,1);x.drawImage(v,(v.videoWidth-s)/2,(v.videoHeight-s)/2,s,s,0,0,480,480);
+  setSelfie(c.toDataURL('image/jpeg',.9));stopCam();$('#camMsg').textContent='Looking good! 🎅';sfx('ok');
+};
+$('#file').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
+    const s=Math.min(im.width,im.height),c=document.createElement('canvas');c.width=c.height=480;
+    c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,480,480);
+    stopCam();setSelfie(c.toDataURL('image/jpeg',.9));$('#camMsg').textContent='Photo added! 🎅';
+  };im.src=r.result};r.readAsDataURL(f);
+};
+
+/* ================= Setup / start ================= */
+function checkReady(){
+  const ok=$('#name').value.trim().length>=2&&$('#sect').value;
+  $('#startBtn').disabled=!ok;
+  $('#startHint').textContent=ok?(S.selfie?'All set! Press Start.':'Tip: add a selfie so it appears on your summary.'):'Enter your name and choose your section to begin.';
+}
+$('#name').addEventListener('input',checkReady);$('#sect').addEventListener('change',checkReady);
+$('#startBtn').onclick=()=>{
+  S.name=$('#name').value.trim();S.section=$('#sect').value;S.started=true;stopCam();
+  $('#setup').classList.add('hide');$('#main').classList.remove('hide');
+  $('#pname').textContent=S.name;$('#psec').textContent='Grade 11 · Section '+S.section;
+  $('#profile').classList.add('on');updateThumb();
+  newAttempt();showTab(0);toast('Good luck, '+S.name+'! 🎄');sfx('ok');
+  scrollTo({top:0,behavior:'smooth'});
+};
+function updateThumb(){
+  const t=$('#pthumb');t.innerHTML=S.selfie?`<img src="${S.selfie}" alt="">`:'🎅';
+  if(S.master)t.insertAdjacentHTML('beforeend','<span class="mb">🏆</span>');
+}
+
+/* ================= Tabs / chips / badges ================= */
+function showTab(p){
+  $$('.tab').forEach(t=>t.classList.toggle('on',+t.dataset.p===p));
+  for(let i=0;i<4;i++)$('#pane'+i).classList.toggle('hide',i!==p);
+}
+$$('.tab').forEach(t=>t.onclick=()=>{if(!t.disabled){showTab(+t.dataset.p);if(+t.dataset.p===3)drawSummary()}});
+function updateChips(){
+  $('#c1').textContent='P1 '+S.score[0]+'/10';$('#c2').textContent='P2 '+S.score[1]+'/10';$('#c3').textContent='P3 '+S.score[2]+'/10';$('#ct').textContent='Total '+total()+'/30';
+}
+function renderBadges(){
+  const b=$('#badges');
+  b.innerHTML=BADGES.map((x,i)=>`<div class="bdg ${S.done[i]>=10?'got':''}"><i>${x.i}</i>${x.n}${S.done[i]>=10?' ✓':''}</div>`).join('')+
+   `<div class="bdg ${S.master?'got':''}"><i>🏆</i>MASTER${S.master?' ✓':''}</div>`;
+}
+
+/* ================= Attempt control ================= */
+function newAttempt(){
+  Q[0]=genP1();Q[1]=genP2();Q[2]=genP3();
+  S.done=[0,0,0];S.score=[0,0,0];S.finished=false;S.master=false;
+  [0,1,2].forEach(i=>{$('#done'+i).classList.remove('on');$('#done'+i).innerHTML=''});
+  $('.tab[data-p="3"]').disabled=true;
+  renderP1();renderP2();renderP3();renderBadges();updateChips();updateThumb();
+}
+function markDone(part,ok){
+  S.done[part]++;if(ok)S.score[part]++;
+  updateChips();sfx(ok?'ok':'bad');
+  if(S.done[part]===10)partComplete(part);
+}
+function partComplete(part){
+  const b=BADGES[part],box=$('#done'+part);
+  box.innerHTML=`<div class="big">${b.i}</div>Part ${part+1} complete! Badge earned: <b>${b.n}</b><br>Score: ${S.score[part]}/10`+(part<2?`<br><button class="btn small green" style="margin-top:8px" type="button" data-go="${part+1}">Go to Part ${part+2} →</button>`:'');
+  box.classList.add('on');
+  const g=box.querySelector('[data-go]');if(g)g.onclick=()=>{showTab(+g.dataset.go);scrollTo({top:0,behavior:'smooth'})};
+  renderBadges();toast(`${b.i} Badge earned: ${b.n}!`);setTimeout(()=>sfx('badge'),350);
+  if(S.done.every(d=>d>=10))finalize();
+  else box.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ================= Database ================= */
+const DBK='cheq_db_v1';
+function getDB(){try{return JSON.parse(localStorage.getItem(DBK))||[]}catch(_){return[]}}
+function addDB(rec){const d=getDB();d.push(rec);try{localStorage.setItem(DBK,JSON.stringify(d))}catch(_){}return d}
+let memDB=[];
+function finalize(){
+  S.finished=true;S.master=total()===30;
+  S.name=$('#name').value.trim()||S.name;
+  const rec={name:S.name,section:S.section,p1:S.score[0],p2:S.score[1],p3:S.score[2],total:total(),passed:total()>=25,master:S.master,date:new Date().toISOString()};
+  let d=getDB();
+  if(!d.length&&!localStorage.getItem(DBK)){memDB.push(rec);d=memDB}else d=addDB(rec);
+  S.db=d;S.attempt=d.filter(r=>r.name.toLowerCase()===S.name.toLowerCase()).length;
+  renderBadges();updateThumb();
+  $('.tab[data-p="3"]').disabled=false;
+  setTimeout(()=>{showTab(3);drawSummary();scrollTo({top:0,behavior:'smooth'});
+    if(S.master)toast('🏆 MASTER badge earned! Perfect score!');else toast(S.score.reduce((a,b)=>a+b,0)>=25?'🎉 You passed!':'Summary is ready.')},1500);
+}
+
+/* ================= Part 1 ================= */
+function renderP1(){
+  const box=$('#p1list');box.innerHTML='';
+  Q[0].forEach((q,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="qn">${i+1}</div><div class="qb"><div class="eq">${eqHTML(parseEq(q.eq))}</div>
+      <div class="choices">${TYPES.map((t,k)=>`<button type="button" class="choice" data-k="${k}">${t}</button>`).join('')}</div>
+      <div class="qa"><button class="btn small chk" type="button">Check</button><span class="res"></span></div></div>`;
+    const ch=[...d.querySelectorAll('.choice')],res=d.querySelector('.res');
+    ch.forEach(c=>c.onclick=()=>{if(q.answered)return;q.sel=+c.dataset.k;ch.forEach(x=>x.classList.toggle('sel',x===c))});
+    d.querySelector('.chk').onclick=e=>{
+      if(q.answered)return;
+      if(q.sel===null){res.textContent='Pick an answer first.';res.className='res bad';return}
+      q.answered=true;const ok=q.sel===q.t;
+      ch.forEach(x=>{x.disabled=true;x.classList.remove('sel');if(+x.dataset.k===q.t)x.classList.add('right');else if(+x.dataset.k===q.sel)x.classList.add('wrong')});
+      res.textContent=ok?'✔ Correct! +1':'✘ Correct answer: '+TYPES[q.t];res.className='res '+(ok?'ok':'bad');
+      e.target.disabled=true;markDone(0,ok);
+    };
+    box.appendChild(d);
+  });
+}
+
+/* ================= Part 2 ================= */
+function renderP2(){
+  const box=$('#p2list');box.innerHTML='';
+  Q[1].forEach((q,i)=>{
+    const p=parseEq(q.eq),nl=p.l.length;
+    const inp=(t,k)=>`<input class="coefIn" type="number" min="1" max="6" step="1" inputmode="numeric" data-k="${k}" aria-label="Coefficient for ${t.f}">${fmt(t.f)}`;
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="qn">${i+1}</div><div class="qb"><div class="eq">${p.l.map((t,k)=>inp(t,k)).join(' + ')} → ${p.r.map((t,k)=>inp(t,nl+k)).join(' + ')}</div>
+      <div class="qa"><button class="btn small chk" type="button">Check</button><span class="res"></span></div></div>`;
+    const ins=[...d.querySelectorAll('.coefIn')],res=d.querySelector('.res');
+    ins.forEach(x=>{
+      x.addEventListener('input',()=>{const v=parseInt(x.value,10);if(isNaN(v))return;if(v>6)x.value=6;else if(v<1)x.value=''});
+      x.addEventListener('keydown',e=>{if(e.key==='Enter')d.querySelector('.chk').click()});
+    });
+    d.querySelector('.chk').onclick=e=>{
+      if(q.answered)return;
+      const vals=ins.map(x=>parseInt(x.value,10));
+      if(vals.some(v=>isNaN(v)||v<1||v>6)){res.textContent='Fill every box with a number from 1 to 6.';res.className='res bad';return}
+      q.answered=true;const ok=isBalanced(p,vals);
+      ins.forEach(x=>x.disabled=true);e.target.disabled=true;
+      res.innerHTML=ok?'✔ Balanced! +1':'✘ Not balanced. Correct: '+eqHTML(p,q.sol);res.className='res '+(ok?'ok':'bad');
+      markDone(1,ok);
+    };
+    box.appendChild(d);
+  });
+}
+
+/* ================= Part 3 ================= */
+function phrase(q){
+  const g=q.g,t=q.t,G=fmt(g.f),T=fmt(t.f);
+  if(g.side==='l'&&t.side==='r')return`${q.n} mol of ${G} reacts completely. How many grams of ${T} are produced?`;
+  if(g.side==='r'&&t.side==='l')return`${q.n} mol of ${G} is produced. How many grams of ${T} are needed?`;
+  if(g.side==='l'&&t.side==='l')return`${q.n} mol of ${G} reacts completely. How many grams of ${T} are needed to react with it?`;
+  return`${q.n} mol of ${G} is produced. How many grams of ${T} are produced along with it?`;
+}
+function renderP3(){
+  const box=$('#p3list');box.innerHTML='';
+  Q[2].forEach((q,i)=>{
+    const all=[...q.p.l,...q.p.r],chips=[...new Set(all.map(x=>x.f))].map(f=>`<span>${fmt(f)} = ${MM[f].toFixed(2)} g/mol</span>`).join('');
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML=`<div class="qn">${i+1}</div><div class="qb"><div class="eq">${eqHTML(q.p)}</div>
+      <div class="mm">${chips}</div>
+      <div style="margin:6px 0;font-weight:500">${phrase(q)}</div>
+      <div class="qa"><input class="ansIn" type="number" step="any" inputmode="decimal" placeholder="grams" aria-label="Answer in grams"> <b>g</b> <button class="btn small chk" type="button">Check</button><span class="res"></span></div></div>`;
+    const inp=d.querySelector('.ansIn'),res=d.querySelector('.res');
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')d.querySelector('.chk').click()});
+    d.querySelector('.chk').onclick=e=>{
+      if(q.answered)return;
+      const v=parseFloat(String(inp.value).replace(',','.'));
+      if(isNaN(v)){res.textContent='Type your answer in grams.';res.className='res bad';return}
+      q.answered=true;const ok=Math.abs(v-q.ans)<=0.02;
+      inp.disabled=true;e.target.disabled=true;
+      res.innerHTML=ok?'✔ Correct! +1':`✘ Correct answer: <b>${q.ans.toFixed(2)} g</b> (${q.n} × ${q.t.c}/${q.g.c} × ${MM[q.t.f].toFixed(2)})`;
+      res.className='res '+(ok?'ok':'bad');markDone(2,ok);
+    };
+    box.appendChild(d);
+  });
+}
+
+/* ================= Scratch pad ================= */
+(function(){
+  const pad=$('#pad'),pc=pad.getContext('2d');let drawing=false,last=null,col='#1d3557',er=false;
+  const pos=e=>{const r=pad.getBoundingClientRect();return{x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height,k:pad.width/r.width}};
+  const stroke=(a,b,e,k)=>{
+    let w=+$('#psize').value*(er?5:1);if(e.pointerType==='pen'&&e.pressure>0)w*=.5+e.pressure*1.2;
+    pc.globalCompositeOperation=er?'destination-out':'source-over';pc.strokeStyle=col;pc.lineWidth=w*k;pc.lineCap='round';pc.lineJoin='round';
+    pc.beginPath();pc.moveTo(a.x,a.y);pc.lineTo(b.x,b.y);pc.stroke();
+  };
+  pad.addEventListener('pointerdown',e=>{e.preventDefault();pad.setPointerCapture(e.pointerId);drawing=true;last=pos(e);stroke(last,{x:last.x+.01,y:last.y},e,last.k)});
+  pad.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();const p=pos(e);stroke(last,p,e,p.k);last=p});
+  ['pointerup','pointercancel','pointerleave'].forEach(n=>pad.addEventListener(n,()=>{drawing=false}));
+  $$('.sw').forEach(s=>s.onclick=()=>{$$('.sw').forEach(x=>x.classList.remove('on'));s.classList.add('on');col=s.dataset.c;er=false;$('#eraser').classList.remove('green')});
+  $('#eraser').onclick=()=>{er=!er;$('#eraser').classList.toggle('green',er)};
+  $('#clearPad').onclick=()=>{pc.clearRect(0,0,pad.width,pad.height);$('#notes').value=''};
+})();
+
+/* ================= Summary canvas ================= */
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function drawSummary(){
+  if(!S.finished)return;
+  const go=()=>{
+    if(S.selfie){const im=new Image();im.onload=()=>paint(im);im.onerror=()=>paint(null);im.src=S.selfie}else paint(null);
+  };
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(go);
+}
+function paint(img){
+  const c=$('#sumCanvas'),x=c.getContext('2d'),W=c.width,H=c.height;
+  const F=(w,s)=>`${w} ${s}px Poppins,"Segoe UI",system-ui,sans-serif`;
+  const th=document.body.className||'santa';
+  const pal={santa:['#c8102e','#0f4d2e'],snowman:['#1f5f8b','#d62839'],chimney:['#8b2c1f','#2a120d']}[th];
+  const decor={santa:['🎅','🦌'],snowman:['⛄','❄️'],chimney:['🏠','🎁']}[th];
+  const pass=total()>=25,tot=total();
+  x.clearRect(0,0,W,H);
+  let g=x.createLinearGradient(0,0,W,H);g.addColorStop(0,'#fff8e6');g.addColorStop(1,'#ffeccb');x.fillStyle=g;x.fillRect(0,0,W,H);
+  g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,pal[0]);g.addColorStop(1,pal[1]);x.fillStyle=g;x.fillRect(0,0,W,190);
+  x.fillStyle='rgba(255,255,255,.75)';for(let i=0;i<46;i++){x.beginPath();x.arc((i*97)%W,(i*53)%190,1.5+(i%3),0,7);x.fill()}
+  x.textAlign='center';x.fillStyle='#fff';x.font=F(800,50);x.fillText('Chemical Equations',W/2,85);
+  x.font=F(500,26);x.fillStyle='#ffe9a8';x.fillText('Christmas Activity · Summary of Completion',W/2,128);
+  x.font='72px sans-serif';x.fillText(decor[0],90,130);x.fillText(decor[1],W-90,130);
+  x.strokeStyle='#f5c542';x.lineWidth=6;x.setLineDash([14,10]);rr(x,14,14,W-28,H-28,26);x.stroke();x.setLineDash([]);
+  // selfie
+  const cx=W/2,cy=345,R=125;
+  x.save();x.beginPath();x.arc(cx,cy,R,0,7);x.closePath();x.clip();
+  if(img){x.drawImage(img,cx-R,cy-R,R*2,R*2)}else{x.fillStyle='#fde2e4';x.fillRect(cx-R,cy-R,R*2,R*2);x.font='120px sans-serif';x.textBaseline='middle';x.fillStyle='#000';x.fillText('🎅',cx,cy+6);x.textBaseline='alphabetic'}
+  x.restore();
+  x.lineWidth=10;x.strokeStyle='#f5c542';x.beginPath();x.arc(cx,cy,R+5,0,7);x.stroke();
+  x.lineWidth=4;x.strokeStyle=pal[0];x.beginPath();x.arc(cx,cy,R+14,0,7);x.stroke();
+  if(S.master){
+    const bx=cx+R*.78,by=cy+R*.82;
+    x.fillStyle='#f5c542';x.beginPath();x.arc(bx,by,66,0,7);x.fill();
+    x.fillStyle='#c8102e';x.beginPath();x.arc(bx,by,55,0,7);x.fill();
+    x.font='46px sans-serif';x.textBaseline='middle';x.fillStyle='#fff';x.fillText('🏆',bx,by-12);x.textBaseline='alphabetic';
+    x.fillStyle='#fff';x.font=F(800,17);x.fillText('MASTER',bx,by+32);
+  }
+  // identity
+  x.fillStyle='#222';x.font=F(700,38);
+  let nm=S.name;while(x.measureText(nm).width>W-120&&nm.length>3)nm=nm.slice(0,-2);if(nm!==S.name)nm+='…';
+  x.fillText(nm,W/2,538);
+  x.font=F(500,24);x.fillStyle='#555';x.fillText('Grade 11 · Section '+S.section,W/2,576);
+  x.fillText(new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),W/2,610);
+  // parts
+  const titles=['Part 1 · Types of Chemical Reactions','Part 2 · Balancing Chemical Equations','Part 3 · Grams from Moles'];
+  titles.forEach((t,i)=>{
+    const y=645+i*98;
+    x.fillStyle='#fff';rr(x,50,y,W-100,84,18);x.fill();x.strokeStyle='#ecd9a6';x.lineWidth=2;x.stroke();
+    x.fillStyle='#f5c542';x.beginPath();x.arc(100,y+42,32,0,7);x.fill();
+    x.fillStyle='#fff';x.beginPath();x.arc(100,y+42,25,0,7);x.fill();
+    x.font='30px sans-serif';x.textBaseline='middle';x.fillStyle='#000';x.fillText(BADGES[i].i,100,y+44);x.textBaseline='alphabetic';
+    x.textAlign='left';x.fillStyle='#222';x.font=F(600,24);x.fillText(t,150,y+38);
+    x.fillStyle='#777';x.font=F(500,18);x.fillText('Badge: '+BADGES[i].n,150,y+64);
+    x.textAlign='right';x.fillStyle=S.score[i]===10?'#17803a':pal[0];x.font=F(800,38);x.fillText(S.score[i]+' / 10',W-75,y+55);
+    x.textAlign='center';
+  });
+  // total
+  const ty=952;
+  x.fillStyle=pass?'#17803a':'#b3261e';rr(x,50,ty,W-100,110,22);x.fill();
+  x.fillStyle='#fff';x.font=F(500,24);x.fillText('TOTAL SCORE',W/2-170,ty+42);
+  x.font=F(800,56);x.fillText(tot+' / 30',W/2-170,ty+92);
+  x.fillStyle='#fff';rr(x,W/2+10,ty+20,W/2-80,70,35);x.fill();
+  x.fillStyle=pass?'#17803a':'#b3261e';x.font=F(800,34);x.fillText(pass?'✔ PASSED':'✘ NOT PASSED',W/2+10+(W/2-80)/2,ty+66);
+  // database
+  const db=S.db||getDB(),n=db.length,dn=db.filter(r=>r.section==='Daniel').length,ez=db.filter(r=>r.section==='Ezekiel').length,ps=db.filter(r=>r.passed).length,ms=db.filter(r=>r.master).length;
+  x.fillStyle='#fff';rr(x,50,1085,W-100,150,18);x.fill();x.strokeStyle='#ecd9a6';x.lineWidth=2;x.stroke();
+  x.fillStyle=pal[0];x.font=F(700,22);x.fillText('📊 Activity Database (this device)',W/2,1122);
+  x.fillStyle='#222';x.font=F(600,24);x.fillText('Activity done '+n+' time'+(n===1?'':'s')+' · Your attempt #'+(S.attempt||1),W/2,1160);
+  x.fillStyle='#555';x.font=F(500,19);x.fillText(`Daniel: ${dn}  ·  Ezekiel: ${ez}  ·  Passed: ${ps}  ·  Master badges: ${ms}`,W/2,1196);
+  x.fillStyle=pal[0];x.font=F(600,22);x.fillText('🎄 Merry Christmas! 🎄',W/2,1268);
+}
+$('#dlBtn').onclick=()=>{
+  const c=$('#sumCanvas');
+  c.toBlob(b=>{
+    const a=document.createElement('a'),nm=(S.name||'student').replace(/[^\w\-]+/g,'_');
+    a.href=URL.createObjectURL(b);a.download='Chemical-Equations-Summary_'+nm+'.png';
+    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    toast('Summary downloaded as PNG ✔');
+  },'image/png');
+};
+$('#againBtn').onclick=()=>{
+  if(!confirm('Start a new attempt with new questions?'))return;
+  newAttempt();showTab(0);scrollTo({top:0,behavior:'smooth'});
+};
+
+/* ================= Init ================= */
+let initTheme='santa';try{initTheme=localStorage.getItem('cheq_theme')||'santa'}catch(_){}
+setTheme(initTheme);
+</script>
+</body>
+</html>
